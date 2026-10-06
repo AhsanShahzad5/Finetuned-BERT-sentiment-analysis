@@ -46,10 +46,12 @@ Example response:
 
 ## Screenshots
 
-![Movie review sentiment checker](image.png)
+![bert-sentiment-analysis-app](image.png)
 
-![Sentiment prediction result](image-1.png)
+![bert-sentiment-analysis-app](image-1.png)
 
 ## Model
 
-This project uses [`ahsanfolium/ai-intern-imdb-sentiment-bert`](https://huggingface.co/ahsanfolium/ai-intern-imdb-sentiment-bert), a BERT model fine-tuned for IMDb sentiment classification.
+This project uses [`ahsanfolium/ai-intern-imdb-sentiment-bert`](https://huggingface.co/ahsanfolium/ai-intern-imdb-sentiment-bert),
+
+**a BERT model fine-tuned for IMDb sentiment classification.**
