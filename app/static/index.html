@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Sentiment Analysis</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-100 flex items-center justify-center h-screen">
+    <div class="p-6 bg-white rounded-lg shadow-lg w-96">
+      <h1 class="text-xl font-bold mb-4 text-center">
+        Movie Review Sentiment Checker
+      </h1>
+      <input
+        id="text"
+        class="border p-2 w-full mb-4"
+        placeholder="Type text..."
+      />
+
+      <!-- Buttons in flex row -->
+      <div class="flex space-x-2 mb-4">
+        <button
+          id="predictBtn"
+          onclick="predict()"
+          class="flex-1 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 disabled:bg-gray-400"
+        >
+          Check Sentiment
+        </button>
+        <button
+          id="tryAgainBtn"
+          onclick="tryAgain()"
+          class="flex-1 bg-gray-400 text-white px-4 py-2 rounded cursor-not-allowed"
+          disabled
+        >
+          Try Again
+        </button>
+      </div>
+
+      <!-- Loader -->
+      <div id="loader" class="hidden text-center mb-2">⏳ Loading...</div>
+
+      <p id="result" class="mt-2 text-lg font-medium text-center"></p>
+    </div>
+
+    <script>
+      const predictBtn = document.getElementById("predictBtn");
+      const tryAgainBtn = document.getElementById("tryAgainBtn");
+      const loader = document.getElementById("loader");
+      const resultEl = document.getElementById("result");
+      const textInput = document.getElementById("text");
+
+      async function predict() {
+        const text = textInput.value.trim();
+        if (!text) return;
+
+        // Disable predict, enable loader
+        predictBtn.disabled = true;
+        loader.classList.remove("hidden");
+
+        try {
+          const res = await fetch("/predict/", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ text }),
+          });
+          const data = await res.json();
+          resultEl.innerText = `Sentiment: ${data.sentiment} (confidence: ${data.confidence})`;
+        } catch (err) {
+          resultEl.innerText = "Error! Try again.";
+        } finally {
+          loader.classList.add("hidden");
+          // Enable Try Again button, disable predict
+          tryAgainBtn.disabled = false;
+          tryAgainBtn.classList.replace("bg-gray-400", "bg-blue-500");
+          tryAgainBtn.classList.replace("cursor-not-allowed", "cursor-pointer");
+        }
+      }
+
+      function tryAgain() {
+        textInput.value = "";
+        resultEl.innerText = "";
+
+        // Enable predict button again
+        predictBtn.disabled = false;
+
+        // Reset Try Again button
+        tryAgainBtn.disabled = true;
+        tryAgainBtn.classList.replace("bg-blue-500", "bg-gray-400");
+        tryAgainBtn.classList.replace("cursor-pointer", "cursor-not-allowed");
+      }
+    </script>
+  </body>
+</html>
